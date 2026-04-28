@@ -15,8 +15,7 @@ async def update_loop(bot):
             users = await cursor.fetchall()
 
     for user_id, epic_id in users:
-        guild = bot.guilds[0] if bot.guilds else None
-        if guild:
+        for guild in bot.guilds:
             member = guild.get_member(user_id)
             if member:
                 try:
