@@ -13,6 +13,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f"起動完了: {bot.user}")
+    await bot.tree.sync()  # ← スラッシュコマンド同期
     start_tasks(bot)
 
 async def load_cogs():
