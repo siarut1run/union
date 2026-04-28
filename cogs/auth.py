@@ -1,10 +1,11 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 from discord.ui import View, Button, Modal, TextInput
 
 from services.epic_service import link_account
 
-# 🔹 モーダル（EPIC入力）
+# 🔹 モーダル
 class EpicModal(Modal, title="EPIC ID認証"):
     epic_id = TextInput(label="EPIC IDを入力", placeholder="例: Player123")
 
@@ -15,7 +16,7 @@ class EpicModal(Modal, title="EPIC ID認証"):
             ephemeral=True
         )
 
-# 🔹 DM側View（永続）
+# 🔹 DM側View
 class DMAuthView(View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -23,12 +24,12 @@ class DMAuthView(View):
     @discord.ui.button(
         label="EPIC IDを入力",
         style=discord.ButtonStyle.green,
-        custom_id="auth:open_modal"
+        custom_id="auth:modal"
     )
     async def open_modal(self, interaction: discord.Interaction, button: Button):
         await interaction.response.send_modal(EpicModal())
 
-# 🔹 サーバー側View（永続）
+# 🔹 サーバー側View
 class AuthPanelView(View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -36,7 +37,7 @@ class AuthPanelView(View):
     @discord.ui.button(
         label="認証する",
         style=discord.ButtonStyle.blurple,
-        custom_id="auth:send_dm"
+        custom_id="auth:dm"
     )
     async def send_dm(self, interaction: discord.Interaction, button: Button):
         try:
@@ -54,6 +55,7 @@ class AuthPanelView(View):
                 "📩 DMを送信しました！確認してください",
                 ephemeral=True
             )
+
         except:
             await interaction.response.send_message(
                 "❌ DMが送れません。DMを開放してください",
@@ -65,21 +67,21 @@ class Auth(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # 起動時に永続View登録
     async def cog_load(self):
         self.bot.add_view(AuthPanelView())
         self.bot.add_view(DMAuthView())
 
-    # 管理者用：パネル設置（1回だけ使う）
-    @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def setup_auth(self, ctx):
+    # 🔥 スラッシュコマンド（管理者のみ）
+    @app_commands.command(name="setup_auth", description="認証パネルを設置")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def setup_auth(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="🔐 認証パネル",
             description="ボタンを押して認証してください",
             color=0x3498db
         )
-        await ctx.send(embed=embed, view=AuthPanelView())
+
+        await interaction.response.send_message(embed=embed, view=AuthPanelView())
 
 async def setup(bot):
     await bot.add_cog(Auth(bot))
