@@ -3,7 +3,10 @@ import aiosqlite
 DB_PATH = "data.db"
 
 async def link_account(user, epic_id):
-    await user.edit(nick=epic_id)
+    try:
+        await user.edit(nick=epic_id)
+    except:
+        pass
 
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("""
