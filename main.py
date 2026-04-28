@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import os
+from database.db import init_db
+from tasks.updater import start_tasks
 
 intents = discord.Intents.all()
 intents.message_content = True
@@ -10,6 +12,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f"起動完了: {bot.user}")
+    start_tasks(bot)
 
 async def load_cogs():
     for file in os.listdir("./cogs"):
@@ -22,6 +25,7 @@ async def load_cogs():
 
 async def main():
     async with bot:
+        await init_db()
         await load_cogs()
         await bot.start(os.getenv("TOKEN"))
 
