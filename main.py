@@ -16,10 +16,8 @@ GUILD_ID = int(os.getenv("GUILD_ID"))  # ← 環境変数にサーバーID入れ
 async def on_ready():
     print(f"起動完了: {bot.user}")
 
-    # 🔥 ギルド同期（即反映）
-    guild = discord.Object(id=GUILD_ID)
-    bot.tree.copy_global_to(guild=guild)
-    await bot.tree.sync(guild=guild)
+    # 🔥 1回だけグローバル同期（これだけ）
+    await bot.tree.sync()
 
     start_tasks(bot)
 
