@@ -72,8 +72,7 @@ class Auth(commands.Cog):
         self.bot.add_view(DMAuthView())
 
     # 🔥 スラッシュコマンド（管理者のみ）
-    @app_commands.command(name="setup_auth", description="認証パネルを設置")
-    @app_commands.checks.has_permissions(administrator=True)
+
     async def setup_auth(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="🔐 認証パネル",
