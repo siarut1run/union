@@ -10,10 +10,17 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+GUILD_ID = int(os.getenv("GUILD_ID"))  # ← 環境変数にサーバーID入れる
+
 @bot.event
 async def on_ready():
     print(f"起動完了: {bot.user}")
-    await bot.tree.sync()  # ← スラッシュコマンド同期
+
+    # 🔥 ギルド同期（即反映）
+    guild = discord.Object(id=GUILD_ID)
+    bot.tree.copy_global_to(guild=guild)
+    await bot.tree.sync(guild=guild)
+
     start_tasks(bot)
 
 async def load_cogs():
