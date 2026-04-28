@@ -10,8 +10,6 @@ class Stats(commands.Cog):
     # async def cog_load(self):
     #     self.bot.tree.add_command(self.stats)
 
-    @app_commands.command(name="stats", description="成績を見る")
-    async def stats(self, interaction):
         await interaction.response.defer()
 
         await update_user_stats(interaction.user.id)
