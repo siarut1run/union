@@ -6,10 +6,9 @@ class Stats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # ❌ cog_load削除（これが原因）
-    # async def cog_load(self):
-    #     self.bot.tree.add_command(self.stats)
-
+    @app_commands.command(name="stats", description="成績を見る")
+    async def stats(self, interaction: discord.Interaction):
+        # 🔥 必ず async関数の中
         await interaction.response.defer()
 
         await update_user_stats(interaction.user.id)
