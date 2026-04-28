@@ -8,8 +8,6 @@ def start_tasks(bot):
 
 @tasks.loop(minutes=10)
 async def update_loop(bot):
-    print("自動更新中...")
-
     async with aiosqlite.connect(DB_PATH) as db:
         async with db.execute("SELECT discord_id, epic_id FROM users") as cursor:
             users = await cursor.fetchall()
