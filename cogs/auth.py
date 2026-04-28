@@ -10,7 +10,7 @@ class EpicModal(Modal, title="EPIC ID認証"):
     epic_id = TextInput(label="EPIC IDを入力", placeholder="例: Player123")
 
     async def on_submit(self, interaction: discord.Interaction):
-        await link_account(interaction.user, self.epic_id.value)
+        await link_account(interaction.client, interaction.user, self.epic_id.value)
         await interaction.response.send_message(
             f"✅ {self.epic_id.value} で認証完了！",
             ephemeral=True
