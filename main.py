@@ -1,12 +1,8 @@
 import discord
 from discord.ext import commands
 import os
-import sys
 
-# 🔥 これでモジュール読み込みエラー完全対策
-sys.path.append(os.path.dirname(__file__))
-
-from database.db import init_db
+from db import init_db
 from tasks.updater import start_tasks
 
 intents = discord.Intents.all()
